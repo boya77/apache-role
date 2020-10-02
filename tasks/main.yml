@@ -1,0 +1,23 @@
+---
+  - name: installing {{ web_pkg }} package
+    yum:
+      name: "{{ web_pkg }}"
+      state: present
+  - name: start & enable {{ web_svc }} service
+    service:
+      name: "{{ web_svc }}"
+      state: started
+      enabled: true
+  - name: opening {{ web_rule }} service in firewall
+    firewalld:
+      service: "{{ web_rule }}"
+      state: enabled
+      permanent: true
+      immediate: true
+  - name: copying templat file 
+    template:
+      src: index.html.j2
+      dest: /var/www/html/index.html
+    notify: restart apache
+
+      
